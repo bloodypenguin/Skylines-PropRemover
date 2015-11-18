@@ -1,6 +1,4 @@
-﻿using System;
-using System.Reflection;
-using ICities;
+﻿using System.Linq;
 using UnityEngine;
 
 namespace PropRemover
@@ -19,11 +17,12 @@ namespace PropRemover
 
         public static void Dispose()
         {
-            if (removerGo != null)
+            if (removerGo == null)
             {
-                Destroy(removerGo);
-                removerGo = null;
+                return;
             }
+            Destroy(removerGo);
+            removerGo = null;
         }
 
 
@@ -35,44 +34,40 @@ namespace PropRemover
 
         public static void RemoveProps()
         {
-            BuildingInfo[] prefabs = Resources.FindObjectsOfTypeAll<BuildingInfo>();
-            for (int j = 0; j < prefabs.Length; j++)
+            var prefabs = Resources.FindObjectsOfTypeAll<BuildingInfo>();
+            foreach (var buildingInfo in prefabs)
             {
-                BuildingInfo buildingInfo = prefabs[j];
-                FastList<BuildingInfo.Prop> fastList = new FastList<BuildingInfo.Prop>();
-                if (buildingInfo != null)
+                var fastList = new FastList<BuildingInfo.Prop>();
+                if (buildingInfo == null)
                 {
-                    if (buildingInfo.m_props != null)
+                    continue;
+                }
+                if (buildingInfo.m_props != null)
+                {
+                    var props = buildingInfo.m_props;
+                    foreach (var prop in props.Where(prop => prop != null))
                     {
-                        BuildingInfo.Prop[] props = buildingInfo.m_props;
-                        for (int k = 0; k < props.Length; k++)
+                        if (prop.m_finalProp != null)
                         {
-                            BuildingInfo.Prop prop = props[k];
-                            if (prop != null)
+                            if (
+                                ((OptionsHolder.Options & ModOption.Smoke) == ModOption.None || !prop.m_finalProp.name.Contains("Smoke") && !prop.m_finalProp.name.Contains("smoke")) &&
+                                ((OptionsHolder.Options & ModOption.Steam) == ModOption.None || !prop.m_finalProp.name.Contains("Steam") && !prop.m_finalProp.name.Contains("steam")) &&
+                                ((OptionsHolder.Options & ModOption.ClownHeads) == ModOption.None || !prop.m_finalProp.name.Contains("Clown") && !prop.m_finalProp.name.Contains("clown")) &&
+                                ((OptionsHolder.Options & ModOption.IceCreamCones) == ModOption.None || !prop.m_finalProp.name.Contains("Cream") && !prop.m_finalProp.name.Contains("cream")) &&
+                                ((OptionsHolder.Options & ModOption.DoughnutSquirrels) == ModOption.None || !prop.m_finalProp.name.Contains("Squirrel") && !prop.m_finalProp.name.Contains("squirrel")) &&
+                                ((OptionsHolder.Options & ModOption.Random3DBillboards) == ModOption.None || prop.m_finalProp.name != "Billboard_3D_variation")
+                                )
                             {
-                                if (prop.m_finalProp != null)
-                                {
-                                    if (
-                                        ((Mod.Options & ModOptions.Smoke) == ModOptions.None || !prop.m_finalProp.name.Contains("Smoke") && !prop.m_finalProp.name.Contains("smoke")) &&
-                                        ((Mod.Options & ModOptions.Steam) == ModOptions.None || !prop.m_finalProp.name.Contains("Steam") && !prop.m_finalProp.name.Contains("steam")) &&
-                                        ((Mod.Options & ModOptions.ClownHeads) == ModOptions.None || !prop.m_finalProp.name.Contains("Clown") && !prop.m_finalProp.name.Contains("clown")) &&
-                                        ((Mod.Options & ModOptions.IceCreamCones) == ModOptions.None || !prop.m_finalProp.name.Contains("Cream") && !prop.m_finalProp.name.Contains("cream")) &&
-                                        ((Mod.Options & ModOptions.DoughnutSquirrels) == ModOptions.None || !prop.m_finalProp.name.Contains("Squirrel") && !prop.m_finalProp.name.Contains("squirrel")) &&
-                                        ((Mod.Options & ModOptions.Random3DBillboards) == ModOptions.None || prop.m_finalProp.name != "Billboard_3D_variation")
-                                        )
-                                    {
-                                        fastList.Add(prop);
-                                    }
-                                }
-                                else
-                                {
-                                    fastList.Add(prop);
-                                }
+                                fastList.Add(prop);
                             }
                         }
+                        else
+                        {
+                            fastList.Add(prop);
+                        }
                     }
-                    buildingInfo.m_props = fastList.ToArray();
                 }
+                buildingInfo.m_props = fastList.ToArray();
             }
         }
     }

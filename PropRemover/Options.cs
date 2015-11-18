@@ -6,6 +6,18 @@ using Debug = UnityEngine.Debug;
 namespace PropRemover
 {
 
+    [Flags]
+    public enum ModOption : long
+    {
+        None = 0,
+        Steam = 1,
+        Smoke = 2,
+        ClownHeads = 4,
+        IceCreamCones = 8,
+        DoughnutSquirrels = 16,
+        Random3DBillboards = 32
+    }
+
     public struct Options
     {
         public bool removeSmoke;
@@ -16,16 +28,23 @@ namespace PropRemover
         public bool removeRandom3dBillboards;
     }
 
+    public static class OptionsHolder
+    {
+        public static ModOption Options = ModOption.None;
+    }
+
     public static class OptionsLoader
     {
+        private const string FileName = "CSL-PropRemover.xml";
+
         public static void LoadOptions()
         {
-            Mod.Options = ModOptions.None;
+            OptionsHolder.Options = ModOption.None;
             Options options;
             try
             {
-                XmlSerializer xmlSerializer = new XmlSerializer(typeof(Options));
-                using (StreamReader streamReader = new StreamReader("CSL-PropRemover.xml"))
+                var xmlSerializer = new XmlSerializer(typeof(Options));
+                using (var streamReader = new StreamReader(FileName))
                 {
                     options = (Options)xmlSerializer.Deserialize(streamReader);
                 }
@@ -46,59 +65,60 @@ namespace PropRemover
             }
             catch (Exception e)
             {
-                Debug.LogError("Unexpected " + e.GetType().Name + " loading options: " + e.Message + "\n" + e.StackTrace);
+                Debug.LogErrorFormat("Unexpected {0} loading options: {1}\n{2}",
+                    e.GetType().Name, e.Message, e.StackTrace);
                 return;
             }
             if (options.removeSmoke)
             {
-                Mod.Options |= ModOptions.Smoke;
+                OptionsHolder.Options |= ModOption.Smoke;
             }
             if (options.removeSteam)
             {
-                Mod.Options |= ModOptions.Steam; 
+                OptionsHolder.Options |= ModOption.Steam;
             }
             if (options.removeClownHeads)
             {
-                Mod.Options |= ModOptions.ClownHeads;   
+                OptionsHolder.Options |= ModOption.ClownHeads;
             }
             if (options.removeIceCones)
             {
-                Mod.Options |= ModOptions.IceCreamCones;       
+                OptionsHolder.Options |= ModOption.IceCreamCones;
             }
             if (options.removeDoughnutSquirrels)
             {
-                Mod.Options |= ModOptions.DoughnutSquirrels;
+                OptionsHolder.Options |= ModOption.DoughnutSquirrels;
             }
             if (options.removeRandom3dBillboards)
             {
-                Mod.Options |= ModOptions.Random3DBillboards;        
+                OptionsHolder.Options |= ModOption.Random3DBillboards;
             }
         }
 
         public static void SaveOptions()
         {
-            Options options = new Options();
-            if ((Mod.Options & ModOptions.Steam) != 0)
+            var options = new Options();
+            if ((OptionsHolder.Options & ModOption.Steam) != 0)
             {
                 options.removeSmoke = true;
             }
-            if ((Mod.Options & ModOptions.Smoke) != 0)
+            if ((OptionsHolder.Options & ModOption.Smoke) != 0)
             {
                 options.removeSteam = true;
             }
-            if ((Mod.Options & ModOptions.ClownHeads) != 0)
+            if ((OptionsHolder.Options & ModOption.ClownHeads) != 0)
             {
                 options.removeClownHeads = true;
             }
-            if ((Mod.Options & ModOptions.IceCreamCones) != 0)
+            if ((OptionsHolder.Options & ModOption.IceCreamCones) != 0)
             {
                 options.removeIceCones = true;
             }
-            if ((Mod.Options & ModOptions.DoughnutSquirrels) != 0)
+            if ((OptionsHolder.Options & ModOption.DoughnutSquirrels) != 0)
             {
                 options.removeDoughnutSquirrels = true;
             }
-            if ((Mod.Options & ModOptions.Random3DBillboards) != 0)
+            if ((OptionsHolder.Options & ModOption.Random3DBillboards) != 0)
             {
                 options.removeRandom3dBillboards = true;
             }
@@ -109,15 +129,16 @@ namespace PropRemover
         {
             try
             {
-                XmlSerializer xmlSerializer = new XmlSerializer(typeof(Options));
-                using (StreamWriter streamWriter = new StreamWriter("CSL-PropRemover.xml"))
+                var xmlSerializer = new XmlSerializer(typeof(Options));
+                using (var streamWriter = new StreamWriter(FileName))
                 {
                     xmlSerializer.Serialize(streamWriter, options);
                 }
             }
             catch (Exception e)
             {
-                Debug.LogError("Unexpected " + e.GetType().Name + " saving options: " + e.Message + "\n" + e.StackTrace);
+                Debug.LogErrorFormat("Unexpected {0} saving options: {1}\n{2}",
+                    e.GetType().Name, e.Message, e.StackTrace);
             }
         }
     }

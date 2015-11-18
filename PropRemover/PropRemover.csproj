@@ -50,6 +50,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="UIHelperBaseExtension.cs" />
+    <Compile Include="LoadingExtension.cs" />
     <Compile Include="Mod.cs" />
     <Compile Include="Options.cs" />
     <Compile Include="PropRemover.cs" />
