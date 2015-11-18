@@ -59,7 +59,7 @@ namespace PropRemover
                         options = (Options)xmlSerializer.Deserialize(streamReader);
                     }
                 }
-                catch (FileNotFoundException)
+                catch (FileNotFoundException) // No options file yet
                 {
                     options = new Options
                     {
@@ -70,21 +70,15 @@ namespace PropRemover
                         removeDoughnutSquirrels = true,
                         removeRandom3dBillboards = true
                     };
-                    SaveOptions(options);
-                    // No options file yet
+                    SaveOptions(options); 
+
                 }
-                foreach (var option in Util.GetValues<ModOption>())
+                foreach (var option in from option in Util.GetValues<ModOption>() 
+                                       where option != ModOption.None
+                                       let field = typeof(Options).GetField(option.GetEnumDescription())
+                                       where (bool)field.GetValue(options) select option)
                 {
-                    if (option == ModOption.None)
-                    {
-                        continue;;
-                    }
-                    var enumDescription = option.GetEnumDescription();
-                    var field = typeof(Options).GetField(enumDescription);
-                    if ((bool)field.GetValue(options))
-                    {
-                        OptionsHolder.Options |= option;
-                    }
+                    OptionsHolder.Options |= option;
                 }
             }
             catch (Exception e)
@@ -96,13 +90,13 @@ namespace PropRemover
 
         public static void SaveOptions()
         {
-            var options = new Options();
+            object options = new Options(); //boxing first
             foreach (var option in Util.GetValues<ModOption>().
                 Where(option => (OptionsHolder.Options & option) != 0))
             {
                 typeof(Options).GetField(option.GetEnumDescription()).SetValue(options, true);
             }
-            SaveOptions(options);
+            SaveOptions((Options)options);
         }
 
         public static void SaveOptions(Options options)
