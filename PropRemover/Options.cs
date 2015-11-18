@@ -1,5 +1,7 @@
 ﻿using System;
+using System.ComponentModel;
 using System.IO;
+using System.Linq;
 using System.Xml.Serialization;
 using Debug = UnityEngine.Debug;
 
@@ -10,11 +12,17 @@ namespace PropRemover
     public enum ModOption : long
     {
         None = 0,
+        [Description("removeSteam")]
         Steam = 1,
+        [Description("removeSmoke")]
         Smoke = 2,
+        [Description("removeClownHeads")]
         ClownHeads = 4,
+        [Description("removeIceCones")]
         IceCreamCones = 8,
+        [Description("removeDoughnutSquirrels")]
         DoughnutSquirrels = 16,
+        [Description("removeRandom3dBillboards")]
         Random3DBillboards = 32
     }
 
@@ -39,92 +47,53 @@ namespace PropRemover
 
         public static void LoadOptions()
         {
-            OptionsHolder.Options = ModOption.None;
-            Options options;
             try
             {
-                var xmlSerializer = new XmlSerializer(typeof(Options));
-                using (var streamReader = new StreamReader(FileName))
+                OptionsHolder.Options = ModOption.None;
+                Options options;
+                try
                 {
-                    options = (Options)xmlSerializer.Deserialize(streamReader);
+                    var xmlSerializer = new XmlSerializer(typeof(Options));
+                    using (var streamReader = new StreamReader(FileName))
+                    {
+                        options = (Options)xmlSerializer.Deserialize(streamReader);
+                    }
                 }
-            }
-            catch (FileNotFoundException)
-            {
-                options = new Options
+                catch (FileNotFoundException)
                 {
-                    removeSmoke = true,
-                    removeSteam = true,
-                    removeClownHeads = true,
-                    removeIceCones = true,
-                    removeDoughnutSquirrels = true,
-                    removeRandom3dBillboards = true
-                };
-                SaveOptions(options);
-                // No options file yet
+                    options = new Options
+                    {
+                        removeSmoke = true,
+                        removeSteam = true,
+                        removeClownHeads = true,
+                        removeIceCones = true,
+                        removeDoughnutSquirrels = true,
+                        removeRandom3dBillboards = true
+                    };
+                    SaveOptions(options);
+                    // No options file yet
+                }
+                foreach (var option in from option in Util.GetValues<ModOption>() let field = typeof(Options).GetField(option.GetEnumDescription<ModOption>()) where (bool)field.GetValue(options) select option)
+                {
+                    OptionsHolder.Options |= option;
+                }
             }
             catch (Exception e)
             {
                 Debug.LogErrorFormat("Unexpected {0} loading options: {1}\n{2}",
                     e.GetType().Name, e.Message, e.StackTrace);
-                return;
-            }
-            if (options.removeSmoke)
-            {
-                OptionsHolder.Options |= ModOption.Smoke;
-            }
-            if (options.removeSteam)
-            {
-                OptionsHolder.Options |= ModOption.Steam;
-            }
-            if (options.removeClownHeads)
-            {
-                OptionsHolder.Options |= ModOption.ClownHeads;
-            }
-            if (options.removeIceCones)
-            {
-                OptionsHolder.Options |= ModOption.IceCreamCones;
-            }
-            if (options.removeDoughnutSquirrels)
-            {
-                OptionsHolder.Options |= ModOption.DoughnutSquirrels;
-            }
-            if (options.removeRandom3dBillboards)
-            {
-                OptionsHolder.Options |= ModOption.Random3DBillboards;
             }
         }
-
         public static void SaveOptions()
         {
             var options = new Options();
-            if ((OptionsHolder.Options & ModOption.Steam) != 0)
+            foreach (var option in Util.GetValues<ModOption>().
+                Where(option => (OptionsHolder.Options & option) != 0))
             {
-                options.removeSmoke = true;
-            }
-            if ((OptionsHolder.Options & ModOption.Smoke) != 0)
-            {
-                options.removeSteam = true;
-            }
-            if ((OptionsHolder.Options & ModOption.ClownHeads) != 0)
-            {
-                options.removeClownHeads = true;
-            }
-            if ((OptionsHolder.Options & ModOption.IceCreamCones) != 0)
-            {
-                options.removeIceCones = true;
-            }
-            if ((OptionsHolder.Options & ModOption.DoughnutSquirrels) != 0)
-            {
-                options.removeDoughnutSquirrels = true;
-            }
-            if ((OptionsHolder.Options & ModOption.Random3DBillboards) != 0)
-            {
-                options.removeRandom3dBillboards = true;
+                typeof(Options).GetField(option.GetEnumDescription()).SetValue(options, true);
             }
             SaveOptions(options);
         }
-
         public static void SaveOptions(Options options)
         {
             try
