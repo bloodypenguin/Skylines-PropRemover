@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 
 namespace PropRemover
 {
@@ -19,6 +21,11 @@ namespace PropRemover
                 return attributes[0].Description;
 
             return value.ToString();
-        } 
+        }
+
+        public static IEnumerable<T> GetValues<T>()
+        {
+            return Enum.GetValues(typeof(T)).Cast<T>();
+        }
     }
 }

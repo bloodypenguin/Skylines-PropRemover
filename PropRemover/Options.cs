@@ -73,17 +73,27 @@ namespace PropRemover
                     SaveOptions(options);
                     // No options file yet
                 }
-                foreach (var option in from option in Util.GetValues<ModOption>() let field = typeof(Options).GetField(option.GetEnumDescription<ModOption>()) where (bool)field.GetValue(options) select option)
+                foreach (var option in Util.GetValues<ModOption>())
                 {
-                    OptionsHolder.Options |= option;
+                    if (option == ModOption.None)
+                    {
+                        continue;;
+                    }
+                    var enumDescription = option.GetEnumDescription();
+                    var field = typeof(Options).GetField(enumDescription);
+                    if ((bool)field.GetValue(options))
+                    {
+                        OptionsHolder.Options |= option;
+                    }
                 }
             }
             catch (Exception e)
             {
-                Debug.LogErrorFormat("Unexpected {0} loading options: {1}\n{2}",
+                Debug.LogErrorFormat("Unexpected {0} while loading options: {1}\n{2}",
                     e.GetType().Name, e.Message, e.StackTrace);
             }
         }
+
         public static void SaveOptions()
         {
             var options = new Options();
@@ -94,6 +104,7 @@ namespace PropRemover
             }
             SaveOptions(options);
         }
+
         public static void SaveOptions(Options options)
         {
             try
@@ -106,7 +117,7 @@ namespace PropRemover
             }
             catch (Exception e)
             {
-                Debug.LogErrorFormat("Unexpected {0} saving options: {1}\n{2}",
+                Debug.LogErrorFormat("Unexpected {0} while saving options: {1}\n{2}",
                     e.GetType().Name, e.Message, e.StackTrace);
             }
         }
