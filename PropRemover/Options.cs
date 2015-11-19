@@ -19,6 +19,8 @@ namespace PropRemover
             removeOctopodes = true;
             removeFlatBillboards = true;
             removeNeonChirpy = true;
+            removeWallFlags = true;
+            removeSolarPanels = true;
         }
 
         [Description("Steam")]
@@ -37,8 +39,12 @@ namespace PropRemover
         public bool removeOctopodes { set; get; }
         [Description("Flat Billboards")]
         public bool removeFlatBillboards { set; get; }
-        [Description("Neon Chirpy")]
+        [Description("Chirpy Holograms")]
         public bool removeNeonChirpy { set; get; }
+        [Description("Wall Flags")]
+        public bool removeWallFlags { set; get; }
+        [Description("Rooftop Solar Panels")]
+        public bool removeSolarPanels { set; get; }
     }
 
     public static class OptionsHolder

@@ -57,7 +57,6 @@ namespace PropRemover
                     {
                         if (prop.m_finalProp != null)
                         {
-                            //TODO(earalov): remove chirpy and octopodes
                             if (
                                 (!OptionsHolder.Options.removeSmoke || !prop.m_finalProp.name.Contains("Smoke") && !prop.m_finalProp.name.Contains("smoke")) &&
                                 (!OptionsHolder.Options.removeSteam || !prop.m_finalProp.name.Contains("Steam") && !prop.m_finalProp.name.Contains("steam")) &&
@@ -65,7 +64,11 @@ namespace PropRemover
                                 (!OptionsHolder.Options.removeIceCones || !prop.m_finalProp.name.Contains("Cream") && !prop.m_finalProp.name.Contains("cream")) &&
                                 (!OptionsHolder.Options.removeDoughnutSquirrels || !prop.m_finalProp.name.Contains("Squirrel") && !prop.m_finalProp.name.Contains("squirrel")) &&
                                 (!OptionsHolder.Options.removeRandom3dBillboards || prop.m_finalProp.name != "Billboard_3D_variation") &&
-                                (!OptionsHolder.Options.removeFlatBillboards || !BillboardCategories.Contains(prop.m_finalProp.editorCategory))
+                                (!OptionsHolder.Options.removeFlatBillboards || prop.m_finalProp.name != "Hologram Ad Game Arcade") &&
+                                (!OptionsHolder.Options.removeNeonChirpy || !BillboardCategories.Contains(prop.m_finalProp.editorCategory)) &&
+                                (!OptionsHolder.Options.removeOctopodes || !prop.m_finalProp.name.Contains("Octopus") && !prop.m_finalProp.name.Contains("octopus")) &&
+                                (!OptionsHolder.Options.removeWallFlags || prop.m_finalProp.name != "flag_pole_wall") &&
+                                (!OptionsHolder.Options.removeSolarPanels || !prop.m_finalProp.name.Contains("Solar panel"))
                                 )
                             {
                                 fastList.Add(prop);
