@@ -57,6 +57,7 @@ namespace PropRemover
                     {
                         if (prop.m_finalProp != null)
                         {
+                            //TODO(earalov): remove chirpy and octopodes
                             if (
                                 (!OptionsHolder.Options.removeSmoke || !prop.m_finalProp.name.Contains("Smoke") && !prop.m_finalProp.name.Contains("smoke")) &&
                                 (!OptionsHolder.Options.removeSteam || !prop.m_finalProp.name.Contains("Steam") && !prop.m_finalProp.name.Contains("steam")) &&

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.IO;
 using System.Xml.Serialization;
 using Debug = UnityEngine.Debug;
@@ -20,14 +21,23 @@ namespace PropRemover
             removeNeonChirpy = true;
         }
 
+        [Description("Steam")]
         public bool removeSmoke { set; get; }
+        [Description("Smoke")]
         public bool removeSteam { set; get; }
+        [Description("Clown Heads")]
         public bool removeClownHeads { set; get; }
+        [Description("Ice Cream Cones")]
         public bool removeIceCones { set; get; }
+        [Description("Doughnut Squirrels")]
         public bool removeDoughnutSquirrels { set; get; }
+        [Description("Random 3D Billboards")]
         public bool removeRandom3dBillboards { set; get; }
+        [Description("Octopodes")]
         public bool removeOctopodes { set; get; }
+        [Description("Flat Billboards")]
         public bool removeFlatBillboards { set; get; }
+        [Description("Neon Chirpy")]
         public bool removeNeonChirpy { set; get; }
     }
 
@@ -52,7 +62,7 @@ namespace PropRemover
                         OptionsHolder.Options = (Options)xmlSerializer.Deserialize(streamReader);
                     }
                 }
-                catch (FileNotFoundException) 
+                catch (FileNotFoundException)
                 {
                     // No options file yet
                 }

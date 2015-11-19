@@ -1,4 +1,5 @@
-﻿using ICities;
+﻿using System.Linq;
+using ICities;
 
 namespace PropRemover
 {
@@ -21,15 +22,13 @@ namespace PropRemover
         public void OnSettingsUI(UIHelperBase helper)
         {
             var group = helper.AddGroup("Prop Remover Options");
-            group.AddCheckbox("Steam", "removeSteam");
-            group.AddCheckbox("Smoke", "removeSmoke");
-            group.AddCheckbox("Clown Heads", "removeClownHeads");
-            group.AddCheckbox("Ice Cream Cones", "removeIceCones");
-            group.AddCheckbox("Doughnut Squirrels", "removeDoughnutSquirrels");
-            group.AddCheckbox("Random 3D Billboards", "removeRandom3dBillboards");
-            group.AddCheckbox("Octopodes", "removeOctopodes");
-            group.AddCheckbox("Flat Billboards", "removeFlatBillboards");
-            group.AddCheckbox("Neon Chirpy", "removeNeonChirpy");
+            var properties = typeof (Options).GetProperties();
+            foreach (var name in from property in properties select property.Name)
+            {
+                var description = OptionsHolder.Options.GetPropertyDescription(name);
+                group.AddCheckbox(description, name);
+
+            }
         }
     }
 }
