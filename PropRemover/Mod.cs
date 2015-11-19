@@ -27,6 +27,9 @@ namespace PropRemover
             group.AddCheckbox("Ice Cream Cones", ModOption.IceCreamCones);
             group.AddCheckbox("Doughnut Squirrels", ModOption.DoughnutSquirrels);
             group.AddCheckbox("Random 3D Billboards", ModOption.Random3DBillboards);
+            group.AddCheckbox("Octopodes", ModOption.Octopodes);
+            group.AddCheckbox("Flat Billboards", ModOption.FlatBillboards);
+            group.AddCheckbox("Neon Chirpy", ModOption.NeonChirpy);
         }
     }
 }

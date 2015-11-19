@@ -23,7 +23,13 @@ namespace PropRemover
         [Description("removeDoughnutSquirrels")]
         DoughnutSquirrels = 16,
         [Description("removeRandom3dBillboards")]
-        Random3DBillboards = 32
+        Random3DBillboards = 32,
+        [Description("removeOctopodes")]
+        Octopodes = 63,
+        [Description("removeFlatBillboards")]
+        FlatBillboards = 128,
+        [Description("removeNeonChirpy")]
+        NeonChirpy = 256
     }
 
     public struct Options
@@ -34,6 +40,9 @@ namespace PropRemover
         public bool removeIceCones;
         public bool removeDoughnutSquirrels;
         public bool removeRandom3dBillboards;
+        public bool removeOctopodes;
+        public bool removeFlatBillboards;
+        public bool removeNeonChirpy;
     }
 
     public static class OptionsHolder
@@ -68,7 +77,10 @@ namespace PropRemover
                         removeClownHeads = true,
                         removeIceCones = true,
                         removeDoughnutSquirrels = true,
-                        removeRandom3dBillboards = true
+                        removeRandom3dBillboards = true,
+                        removeOctopodes = true,
+                        removeFlatBillboards = true,
+                        removeNeonChirpy = true
                     };
                     SaveOptions(options); 
 

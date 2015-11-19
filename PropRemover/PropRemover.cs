@@ -8,6 +8,17 @@ namespace PropRemover
     {
         private static GameObject removerGo;
 
+        private static string[] billboardCategories = {
+            "PropsBillboardsSmallBillboard",
+            "PropsBillboardsMediumBillboard",
+            "PropsBillboardsLargeBillboard",
+            "PropsSpecialBillboardsRandomSmallBillboard",
+            "PropsSpecialBillboardsRandomMediumBillboard",
+            "PropsSpecialBillboardsRandomLargeBillboard",
+        };
+
+
+
         public static void Initialize()
         {
             Dispose();
@@ -55,7 +66,9 @@ namespace PropRemover
                                 ((OptionsHolder.Options & ModOption.ClownHeads) == ModOption.None || !prop.m_finalProp.name.Contains("Clown") && !prop.m_finalProp.name.Contains("clown")) &&
                                 ((OptionsHolder.Options & ModOption.IceCreamCones) == ModOption.None || !prop.m_finalProp.name.Contains("Cream") && !prop.m_finalProp.name.Contains("cream")) &&
                                 ((OptionsHolder.Options & ModOption.DoughnutSquirrels) == ModOption.None || !prop.m_finalProp.name.Contains("Squirrel") && !prop.m_finalProp.name.Contains("squirrel")) &&
-                                ((OptionsHolder.Options & ModOption.Random3DBillboards) == ModOption.None || prop.m_finalProp.name != "Billboard_3D_variation")
+                                ((OptionsHolder.Options & ModOption.Random3DBillboards) == ModOption.None || prop.m_finalProp.name != "Billboard_3D_variation") &&
+                                ((OptionsHolder.Options & ModOption.FlatBillboards) == ModOption.None || !billboardCategories.Contains(prop.m_finalProp.editorCategory))
+
                                 )
                             {
                                 fastList.Add(prop);
