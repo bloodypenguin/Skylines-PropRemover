@@ -6,9 +6,9 @@ namespace PropRemover
 
     public class PropRemover : MonoBehaviour
     {
-        private static GameObject removerGo;
 
-        private static string[] billboardCategories = {
+        private static readonly string gameObjectName = "PropRemover";
+        private static readonly string[] BillboardCategories = {
             "PropsBillboardsSmallBillboard",
             "PropsBillboardsMediumBillboard",
             "PropsBillboardsLargeBillboard",
@@ -17,29 +17,26 @@ namespace PropRemover
             "PropsSpecialBillboardsRandomLargeBillboard",
         };
 
-
-
         public static void Initialize()
         {
             Dispose();
-            removerGo = new GameObject("PropRemover");
+            var removerGo = new GameObject(gameObjectName);
             removerGo.AddComponent<PropRemover>();
         }
 
         public static void Dispose()
         {
+            var removerGo = GameObject.Find(gameObjectName);
             if (removerGo == null)
             {
                 return;
             }
             Destroy(removerGo);
-            removerGo = null;
         }
-
 
         public void Update()
         {
-            PropRemover.RemoveProps();
+            RemoveProps();
             Dispose();
         }
 
@@ -67,7 +64,7 @@ namespace PropRemover
                                 ((OptionsHolder.Options & ModOption.IceCreamCones) == ModOption.None || !prop.m_finalProp.name.Contains("Cream") && !prop.m_finalProp.name.Contains("cream")) &&
                                 ((OptionsHolder.Options & ModOption.DoughnutSquirrels) == ModOption.None || !prop.m_finalProp.name.Contains("Squirrel") && !prop.m_finalProp.name.Contains("squirrel")) &&
                                 ((OptionsHolder.Options & ModOption.Random3DBillboards) == ModOption.None || prop.m_finalProp.name != "Billboard_3D_variation") &&
-                                ((OptionsHolder.Options & ModOption.FlatBillboards) == ModOption.None || !billboardCategories.Contains(prop.m_finalProp.editorCategory))
+                                ((OptionsHolder.Options & ModOption.FlatBillboards) == ModOption.None || !BillboardCategories.Contains(prop.m_finalProp.editorCategory))
 
                                 )
                             {

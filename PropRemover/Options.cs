@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Xml.Serialization;
+using ColossalFramework;
 using Debug = UnityEngine.Debug;
 
 namespace PropRemover
@@ -25,24 +26,37 @@ namespace PropRemover
         [Description("removeRandom3dBillboards")]
         Random3DBillboards = 32,
         [Description("removeOctopodes")]
-        Octopodes = 63,
+        Octopodes = 64,
         [Description("removeFlatBillboards")]
         FlatBillboards = 128,
         [Description("removeNeonChirpy")]
         NeonChirpy = 256
     }
 
-    public struct Options
+    public class Options
     {
-        public bool removeSmoke;
-        public bool removeSteam;
-        public bool removeClownHeads;
-        public bool removeIceCones;
-        public bool removeDoughnutSquirrels;
-        public bool removeRandom3dBillboards;
-        public bool removeOctopodes;
-        public bool removeFlatBillboards;
-        public bool removeNeonChirpy;
+        public Options()
+        {
+            removeSmoke = true;
+            removeSteam = true;
+            removeClownHeads = true;
+            removeIceCones = true;
+            removeDoughnutSquirrels = true;
+            removeRandom3dBillboards = true;
+            removeOctopodes = true;
+            removeFlatBillboards = true;
+            removeNeonChirpy = true;
+        }
+
+        public bool removeSmoke { set; get; }
+        public bool removeSteam { set; get; }
+        public bool removeClownHeads { set; get; }
+        public bool removeIceCones { set; get; }
+        public bool removeDoughnutSquirrels { set; get; }
+        public bool removeRandom3dBillboards { set; get; }
+        public bool removeOctopodes { set; get; }
+        public bool removeFlatBillboards { set; get; }
+        public bool removeNeonChirpy { set; get; }
     }
 
     public static class OptionsHolder
@@ -70,25 +84,14 @@ namespace PropRemover
                 }
                 catch (FileNotFoundException) // No options file yet
                 {
-                    options = new Options
-                    {
-                        removeSmoke = true,
-                        removeSteam = true,
-                        removeClownHeads = true,
-                        removeIceCones = true,
-                        removeDoughnutSquirrels = true,
-                        removeRandom3dBillboards = true,
-                        removeOctopodes = true,
-                        removeFlatBillboards = true,
-                        removeNeonChirpy = true
-                    };
-                    SaveOptions(options); 
-
+                    options = new Options();
+                    SaveOptions(options);
                 }
-                foreach (var option in from option in Util.GetValues<ModOption>() 
+                foreach (var option in from option in Util.GetValues<ModOption>()
                                        where option != ModOption.None
-                                       let field = typeof(Options).GetField(option.GetEnumDescription())
-                                       where (bool)field.GetValue(options) select option)
+                                       let isEnabled = (bool)typeof(Options).GetProperty(option.GetEnumDescription()).GetValue(options, null)
+                                       where isEnabled
+                                       select option)
                 {
                     OptionsHolder.Options |= option;
                 }
@@ -102,13 +105,12 @@ namespace PropRemover
 
         public static void SaveOptions()
         {
-            object options = new Options(); //boxing first
-            foreach (var option in Util.GetValues<ModOption>().
-                Where(option => (OptionsHolder.Options & option) != 0))
+            var options = new Options();
+            foreach (var option in Util.GetValues<ModOption>().Where(option => option != ModOption.None))
             {
-                typeof(Options).GetField(option.GetEnumDescription()).SetValue(options, true);
+                typeof(Options).GetProperty(option.GetEnumDescription()).SetValue(options, OptionsHolder.Options.IsFlagSet(option), null);
             }
-            SaveOptions((Options)options);
+            SaveOptions(options);
         }
 
         public static void SaveOptions(Options options)
