@@ -1,23 +1,16 @@
-﻿using ColossalFramework;
-using ICities;
+﻿using ICities;
 
 namespace PropRemover
 {
     public static class UIHelperBaseExtension
     {
-        public static void AddCheckbox(this UIHelperBase group, string text, ModOption flag)
+        public static void AddCheckbox(this UIHelperBase group, string text, string propertyName)
         {
-            group.AddCheckbox(text, OptionsHolder.Options.IsFlagSet(flag),
+            var property = typeof (Options).GetProperty(propertyName);
+            group.AddCheckbox(text, (bool)property.GetValue(OptionsHolder.Options, null),
                 b =>
                 {
-                    if (b)
-                    {
-                        OptionsHolder.Options |= flag;
-                    }
-                    else
-                    {
-                        OptionsHolder.Options &= ~flag;
-                    }
+                    property.SetValue(OptionsHolder.Options, b, null);
                     OptionsLoader.SaveOptions();
                 });
         } 

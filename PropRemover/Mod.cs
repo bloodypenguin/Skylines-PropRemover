@@ -21,15 +21,15 @@ namespace PropRemover
         public void OnSettingsUI(UIHelperBase helper)
         {
             var group = helper.AddGroup("Prop Remover Options");
-            group.AddCheckbox("Steam", ModOption.Steam);
-            group.AddCheckbox("Smoke", ModOption.Smoke);
-            group.AddCheckbox("Clown Heads", ModOption.ClownHeads);
-            group.AddCheckbox("Ice Cream Cones", ModOption.IceCreamCones);
-            group.AddCheckbox("Doughnut Squirrels", ModOption.DoughnutSquirrels);
-            group.AddCheckbox("Random 3D Billboards", ModOption.Random3DBillboards);
-            group.AddCheckbox("Octopodes", ModOption.Octopodes);
-            group.AddCheckbox("Flat Billboards", ModOption.FlatBillboards);
-            group.AddCheckbox("Neon Chirpy", ModOption.NeonChirpy);
+            group.AddCheckbox("Steam", "removeSteam");
+            group.AddCheckbox("Smoke", "removeSmoke");
+            group.AddCheckbox("Clown Heads", "removeClownHeads");
+            group.AddCheckbox("Ice Cream Cones", "removeIceCones");
+            group.AddCheckbox("Doughnut Squirrels", "removeDoughnutSquirrels");
+            group.AddCheckbox("Random 3D Billboards", "removeRandom3dBillboards");
+            group.AddCheckbox("Octopodes", "removeOctopodes");
+            group.AddCheckbox("Flat Billboards", "removeFlatBillboards");
+            group.AddCheckbox("Neon Chirpy", "removeNeonChirpy");
         }
     }
 }

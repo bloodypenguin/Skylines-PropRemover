@@ -58,14 +58,13 @@ namespace PropRemover
                         if (prop.m_finalProp != null)
                         {
                             if (
-                                ((OptionsHolder.Options & ModOption.Smoke) == ModOption.None || !prop.m_finalProp.name.Contains("Smoke") && !prop.m_finalProp.name.Contains("smoke")) &&
-                                ((OptionsHolder.Options & ModOption.Steam) == ModOption.None || !prop.m_finalProp.name.Contains("Steam") && !prop.m_finalProp.name.Contains("steam")) &&
-                                ((OptionsHolder.Options & ModOption.ClownHeads) == ModOption.None || !prop.m_finalProp.name.Contains("Clown") && !prop.m_finalProp.name.Contains("clown")) &&
-                                ((OptionsHolder.Options & ModOption.IceCreamCones) == ModOption.None || !prop.m_finalProp.name.Contains("Cream") && !prop.m_finalProp.name.Contains("cream")) &&
-                                ((OptionsHolder.Options & ModOption.DoughnutSquirrels) == ModOption.None || !prop.m_finalProp.name.Contains("Squirrel") && !prop.m_finalProp.name.Contains("squirrel")) &&
-                                ((OptionsHolder.Options & ModOption.Random3DBillboards) == ModOption.None || prop.m_finalProp.name != "Billboard_3D_variation") &&
-                                ((OptionsHolder.Options & ModOption.FlatBillboards) == ModOption.None || !BillboardCategories.Contains(prop.m_finalProp.editorCategory))
-
+                                (!OptionsHolder.Options.removeSmoke || !prop.m_finalProp.name.Contains("Smoke") && !prop.m_finalProp.name.Contains("smoke")) &&
+                                (!OptionsHolder.Options.removeSteam || !prop.m_finalProp.name.Contains("Steam") && !prop.m_finalProp.name.Contains("steam")) &&
+                                (!OptionsHolder.Options.removeClownHeads || !prop.m_finalProp.name.Contains("Clown") && !prop.m_finalProp.name.Contains("clown")) &&
+                                (!OptionsHolder.Options.removeIceCones || !prop.m_finalProp.name.Contains("Cream") && !prop.m_finalProp.name.Contains("cream")) &&
+                                (!OptionsHolder.Options.removeDoughnutSquirrels || !prop.m_finalProp.name.Contains("Squirrel") && !prop.m_finalProp.name.Contains("squirrel")) &&
+                                (!OptionsHolder.Options.removeRandom3dBillboards || prop.m_finalProp.name != "Billboard_3D_variation") &&
+                                (!OptionsHolder.Options.removeFlatBillboards || !BillboardCategories.Contains(prop.m_finalProp.editorCategory))
                                 )
                             {
                                 fastList.Add(prop);
