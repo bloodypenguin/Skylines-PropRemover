@@ -1,11 +1,9 @@
-﻿using System;
-using System.ComponentModel;
-using System.IO;
-using System.Xml.Serialization;
-using Debug = UnityEngine.Debug;
+﻿using System.ComponentModel;
+using PropRemover.OptionsFramework.Attibutes;
 
 namespace PropRemover
 {
+    [Options("PropRemover", "CSL-PropRemover")]
     public class Options
     {
         public Options()
@@ -21,80 +19,35 @@ namespace PropRemover
             removeNeonChirpy = true;
             removeWallFlags = true;
             removeSolarPanels = true;
+            removeAnimatedBillboards = true;
+            removeLogoBillboards = false;
         }
 
-        [Description("Steam")]
+        [Checkbox("Steam")]
         public bool removeSmoke { set; get; }
-        [Description("Smoke")]
+        [Checkbox("Smoke")]
         public bool removeSteam { set; get; }
-        [Description("Clown Heads")]
+        [Checkbox("Clown Heads")]
         public bool removeClownHeads { set; get; }
-        [Description("Ice Cream Cones")]
+        [Checkbox("Ice Cream Cones")]
         public bool removeIceCones { set; get; }
-        [Description("Doughnut Squirrels")]
+        [Checkbox("Doughnut Squirrels")]
         public bool removeDoughnutSquirrels { set; get; }
-        [Description("Random 3D Billboards")]
+        [Checkbox("Random 3D Billboards")]
         public bool removeRandom3dBillboards { set; get; }
-        [Description("Octopodes")]
+        [Checkbox("Octopodes")]
         public bool removeOctopodes { set; get; }
-        [Description("Flat Billboards")]
+        [Checkbox("Flat Billboards")]
         public bool removeFlatBillboards { set; get; }
-        [Description("Chirpy Holograms")]
+        [Checkbox("Animated Billboards")]
+        public bool removeAnimatedBillboards { set; get; }
+        [Checkbox("Logo Billboards")]
+        public bool removeLogoBillboards { set; get; }
+        [Checkbox("Chirpy Holograms")]
         public bool removeNeonChirpy { set; get; }
-        [Description("Wall Flags")]
+        [Checkbox("Wall Flags")]
         public bool removeWallFlags { set; get; }
-        [Description("Rooftop Solar Panels")]
+        [Checkbox("Rooftop Solar Panels")]
         public bool removeSolarPanels { set; get; }
-    }
-
-    public static class OptionsHolder
-    {
-        public static Options Options = new Options();
-    }
-
-    public static class OptionsLoader
-    {
-        private const string FileName = "CSL-PropRemover.xml";
-
-        public static void LoadOptions()
-        {
-            try
-            {
-                try
-                {
-                    var xmlSerializer = new XmlSerializer(typeof(Options));
-                    using (var streamReader = new StreamReader(FileName))
-                    {
-                        OptionsHolder.Options = (Options)xmlSerializer.Deserialize(streamReader);
-                    }
-                }
-                catch (FileNotFoundException)
-                {
-                    // No options file yet
-                }
-            }
-            catch (Exception e)
-            {
-                Debug.LogErrorFormat("Unexpected {0} while loading options: {1}\n{2}",
-                    e.GetType().Name, e.Message, e.StackTrace);
-            }
-        }
-
-        public static void SaveOptions()
-        {
-            try
-            {
-                var xmlSerializer = new XmlSerializer(typeof(Options));
-                using (var streamWriter = new StreamWriter(FileName))
-                {
-                    xmlSerializer.Serialize(streamWriter, OptionsHolder.Options);
-                }
-            }
-            catch (Exception e)
-            {
-                Debug.LogErrorFormat("Unexpected {0} while saving options: {1}\n{2}",
-                    e.GetType().Name, e.Message, e.StackTrace);
-            }
-        }
     }
 }

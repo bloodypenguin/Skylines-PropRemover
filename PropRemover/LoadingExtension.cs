@@ -8,10 +8,11 @@ namespace PropRemover
         {
             base.OnLevelLoaded(mode);
 
-            if (mode == LoadMode.LoadGame || mode == LoadMode.NewGame)
+            if (mode != LoadMode.LoadGame && mode != LoadMode.NewGame && mode != LoadMode.NewGameFromScenario)
             {
-                PropRemover.Initialize();
+                return;
             }
+            PropRemover.Initialize();
         }
 
         public override void OnLevelUnloading()
